@@ -2,7 +2,7 @@
 
 Need help with CleanerZX?
 
-Email: cleanerzx.support@gmail.com
+Email: zxapps1993@gmail.com
 
 ## Subscriptions
 
