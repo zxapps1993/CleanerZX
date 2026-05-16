@@ -58,7 +58,7 @@ CleanerZX is what the iOS community calls a **local-first** app. Practically, th
 - All scanning and analysis runs on the same device that holds your photos, contacts, and files. The CPU, GPU, and Neural Engine on your iPhone or iPad do the work.
 - The app does not maintain a backend service, user database, or login system.
 - The app does not embed software development kits from analytics vendors, advertising networks, attribution providers, marketing automation platforms, social media companies, or external crash-reporting services.
-- The face-grouping feature uses a Core ML model that ships inside the app bundle. Image embeddings produced by that model stay on the device and are not exported.
+- The face-grouping feature uses an open-source face-embedding neural network called **SFace**, published by OpenCV under the Apache 2.0 license. The model ships inside the app bundle as Core ML weights, runs locally on your device's CPU and Neural Engine, and never communicates with any server. Image embeddings produced by that model stay on the device and are not exported. Open-source attribution is available in **Account → Licenses** inside the app.
 
 The reason these architectural choices matter for privacy is straightforward: if the app cannot send your data anywhere, then your data does not go anywhere.
 
