@@ -1,6 +1,6 @@
 # CleanerZX Privacy Policy
 
-**In effect from:** May 15, 2026
+**In effect from:** June 12, 2026
 
 CleanerZX is an iPhone and iPad app published by **ZXApps** (the developer behind the apps offered from the contact address listed in [§19](#19-how-to-reach-us)). It helps you reclaim storage by spotting duplicate photos, oversized videos, screenshot clutter, and messy contact cards. This document explains, in plain language, what the app does with information on your device — and what it deliberately avoids doing.
 
@@ -38,10 +38,10 @@ The short version is below in [§1](#1-the-shortest-possible-summary). The long 
 
 If you stop reading after this section, take these eight facts with you:
 
-1. CleanerZX runs entirely on your iPhone or iPad. ZXApps does not operate a server that stores your data.
-2. The app never uploads your photos, videos, contacts, location, or scan results.
-3. The app has no analytics SDK, no advertising SDK, no attribution SDK, and no third-party crash reporter.
-4. The app does not read or use any tracking identifier (no IDFA, no IDFV, no advertising ID).
+1. CleanerZX runs almost entirely on your iPhone or iPad. ZXApps does not operate a server that stores your data.
+2. The app never uploads your photos, videos, contacts, location, face data, files, or scan results to anyone.
+3. The app uses **one** third-party SDK — Google's **Firebase Analytics** — to collect anonymous, aggregated usage statistics (which screens and features are used). It has no advertising SDK, no attribution SDK, and no third-party crash reporter. See [§3.7](#37-anonymous-usage-analytics) and [§7](#7-network-behavior-of-the-app).
+4. The app does not use the advertising identifier (IDFA) and does no cross-app or cross-site tracking. Firebase Analytics uses a per-install identifier and the vendor identifier (IDFV) only to count usage, never to track you across other companies' apps or websites.
 5. You are not asked to create an account, sign in, or share your email to use the app.
 6. Permissions (Photos, Contacts, Location, Notifications) are optional and independent. Denying one only disables that one feature.
 7. CleanerZX Pro is a subscription sold by Apple through the App Store. We do not see your payment details.
@@ -57,16 +57,16 @@ CleanerZX is what the iOS community calls a **local-first** app. Practically, th
 
 - All scanning and analysis runs on the same device that holds your photos, contacts, and files. The CPU, GPU, and Neural Engine on your iPhone or iPad do the work.
 - The app does not maintain a backend service, user database, or login system.
-- The app does not embed software development kits from analytics vendors, advertising networks, attribution providers, marketing automation platforms, social media companies, or external crash-reporting services.
+- The app embeds exactly one third-party SDK: Google's **Firebase Analytics**, used only to collect anonymous, aggregated usage statistics so we can understand which features are useful and improve the app. It is described in [§3.7](#37-anonymous-usage-analytics) and [§7](#7-network-behavior-of-the-app). The app embeds **no** SDKs from advertising networks, attribution providers, marketing automation platforms, social media companies, or external crash-reporting services.
 - The face-grouping feature uses an open-source face-embedding neural network called **SFace**, published by OpenCV under the Apache 2.0 license. The model ships inside the app bundle as Core ML weights, runs locally on your device's CPU and Neural Engine, and never communicates with any server. Image embeddings produced by that model stay on the device and are not exported. Open-source attribution is available in **Account → Licenses** inside the app.
 
-The reason these architectural choices matter for privacy is straightforward: if the app cannot send your data anywhere, then your data does not go anywhere.
+The reason these architectural choices matter for privacy is straightforward: your personal content — photos, videos, contacts, files, face data, precise location, and scan results — never leaves your device. The only information that does leave is the anonymous, aggregated usage analytics described in [§3.7](#37-anonymous-usage-analytics).
 
 ---
 
 ## 3. Inventory of on-device data the app reads
 
-The sections below list, by category, every type of information CleanerZX touches while it is running. **Every item in this section is read and processed only on your device.** None of it is uploaded.
+The sections below list, by category, every type of information CleanerZX touches while it is running. **Everything in sections 3.1–3.6 is read and processed only on your device and is never uploaded.** The single exception is the anonymous usage analytics described in [§3.7](#37-anonymous-usage-analytics).
 
 ### 3.1 Your photo library
 
@@ -113,7 +113,21 @@ CleanerZX keeps a small amount of bookkeeping on the device:
 - a copy of the subscription status reported by StoreKit,
 - a few flags shared with the home-screen widget and Live Activity so they can stay in sync.
 
-This is stored in the app's own iOS container and in an App Group container shared with the app's widget and Live Activity extensions. Nothing leaves the device.
+This is stored in the app's own iOS container and in an App Group container shared with the app's widget and Live Activity extensions. Nothing in this subsection leaves the device.
+
+### 3.7 Anonymous usage analytics
+
+CleanerZX uses **Google Firebase Analytics** to understand, in aggregate, how the app is used — for example, which screens are opened most often and how often a Quick or Deep scan is started. This helps us decide what to improve.
+
+What is sent to Google for analytics:
+
+- **Anonymous identifiers** — a random per-install "app instance ID" and your device's vendor identifier (IDFV). These identify an installation of the app, not you. They are **not** the advertising identifier (IDFA), which the app does not use.
+- **Product-interaction / usage events** — for example `screen_view` (which screen was shown) and `scan_button_tap` (which scan type was tapped). These events do **not** contain your photos, videos, contacts, files, or the contents of your library.
+- **Basic technical/diagnostic data** automatically recorded by Firebase — such as app version, device model, operating-system version, language, and a coarse region (country/region) derived from the IP address of the request. Google uses the IP address to derive coarse location and does **not** log it in Analytics.
+
+This data is **not linked to your identity** and is **not used to track you** across other companies' apps or websites. Google processes it as our service provider/processor; its handling is also governed by Google's Privacy Policy (<https://policies.google.com/privacy>) and the Firebase data-processing terms. You can read how Firebase uses data at <https://firebase.google.com/support/privacy>.
+
+Because this data is anonymous and not tied to you, deleting the app stops all further analytics collection from your device. See [§13](#13-controls-you-always-have-through-ios) for the controls available to you.
 
 ---
 
@@ -126,14 +140,13 @@ For complete clarity, here are categories of data the app does **not** touch:
 - Your photos, videos, thumbnails, or face embeddings — none of these are uploaded, anywhere, ever.
 - Your contact cards or any field inside them.
 - Your home address, work address, frequently-visited places, or location history.
-- The Apple advertising identifier (IDFA) or the vendor identifier (IDFV).
-- Any cross-app tracking identifier or fingerprint.
-- Your IP address. The app does not perform analytics requests that would expose it.
-- Crash dumps, telemetry, or diagnostic logs — there is no third-party crash reporter wired in.
+- The Apple advertising identifier (IDFA). (Firebase Analytics uses a per-install ID and the vendor identifier (IDFV) to count usage — see [§3.7](#37-anonymous-usage-analytics) — but never the IDFA.)
+- Any cross-app tracking identifier or fingerprint, and no tracking of you across other companies' apps or websites.
+- Full crash dumps or detailed diagnostic logs — there is no third-party crash reporter wired in. (Firebase Analytics does record basic technical signals such as app version and OS version, as described in [§3.7](#37-anonymous-usage-analytics).)
 - Browsing history, search history, Safari activity, or anything from other apps.
 - Biometric data, health data, financial data, or any "sensitive" personal data as those terms are defined under GDPR or CCPA.
 
-Web technologies like cookies, pixels, and tracking beacons do not apply, because CleanerZX is a native iOS app that does not run a web view for analytics purposes and does not communicate with our servers.
+The only information that ever leaves your device is the anonymous usage analytics in [§3.7](#37-anonymous-usage-analytics). The app uses no advertising cookies, pixels, or tracking beacons, and does not run a web view for advertising or tracking purposes.
 
 ---
 
@@ -170,15 +183,16 @@ Nothing in this table is uploaded. None of it is encrypted with a separate passw
 
 ## 7. Network behavior of the app
 
-CleanerZX does not contact a ZXApps-owned server — there isn't one. The only outbound activity that may occur during use of the app comes from Apple's own iOS frameworks:
+CleanerZX does not contact a ZXApps-owned server — there isn't one. Outbound network activity is limited to the following:
 
+- **Firebase Analytics (Google)** receives the anonymous, aggregated usage analytics described in [§3.7](#37-anonymous-usage-analytics). This is the only third-party, non-Apple destination the app sends data to, and it never receives your photos, videos, contacts, files, or library contents.
 - **StoreKit** contacts Apple's App Store servers when you view subscription options, purchase, restore, or when your entitlement is refreshed. This is operated by Apple, not by us.
 - **MapKit** loads map tiles from Apple's mapping infrastructure when you open the Places map.
 - **CLGeocoder** (Apple's reverse-geocoder) may turn a coordinate into a human-readable place name when the app needs to label a cluster on the Places map. This call goes to Apple, not to us.
 
-These Apple-operated calls are subject to Apple's own privacy policy, which you can read at <https://www.apple.com/legal/privacy/>.
+The Apple-operated calls are subject to Apple's own privacy policy (<https://www.apple.com/legal/privacy/>); the Firebase calls are subject to Google's (<https://policies.google.com/privacy>).
 
-The app does **not** make analytics requests, telemetry pings, attribution callbacks, ad requests, or webhook calls to any third party. There are no `URLSession` calls in the codebase that send personal data anywhere.
+Apart from the anonymous analytics above, the app makes **no** advertising requests, attribution callbacks, or webhook calls to any third party, and sends no personal content anywhere.
 
 ---
 
@@ -224,19 +238,19 @@ For transparency, here is the full list of Apple-provided system frameworks Clea
 - **UserNotifications** — scheduling local reminders.
 - **SwiftData** and **Foundation** — local storage and standard utilities.
 
-There are no third-party SDKs in this list. There are no third-party SDKs in the app, full stop.
+All of the frameworks listed above are provided by Apple. The app's only **third-party** SDK is Google's Firebase Analytics, used solely for the anonymous usage analytics described in [§3.7](#37-anonymous-usage-analytics) and [§7](#7-network-behavior-of-the-app).
 
 ---
 
 ## 11. Security posture
 
-Because nothing leaves the device, the security model is essentially the security model of iOS itself, plus a small amount of care on our side:
+Because your personal content never leaves the device (the only outbound data is the anonymous analytics in [§3.7](#37-anonymous-usage-analytics)), the security model is essentially the security model of iOS itself, plus a small amount of care on our side:
 
 - **App sandbox.** iOS prevents other apps from reading CleanerZX's local container.
 - **Hardware-backed encryption.** When your device is locked, on-device storage is encrypted using the Secure Enclave's hardware keys.
 - **Security-scoped bookmarks.** Folders you grant via the document picker are accessed only inside Apple's security-scoped resource APIs and are not retained across uninstalls.
 - **Least-privilege framework use.** Each Apple permission is requested only at the moment the matching feature is invoked.
-- **No outbound personal-data transport.** Because the app never opens a connection to our servers, classes of risk like "server breach" or "backup leak from a vendor" are simply not applicable.
+- **No outbound transport of your content.** The app never opens a connection to a ZXApps server (there isn't one), and your photos, videos, contacts, files, and scan results never leave the device. The only outbound data is the anonymous usage analytics in [§3.7](#37-anonymous-usage-analytics), which contains no personal content and is handled by Google under its own security and privacy commitments.
 
 No technical system is ever provably perfect. But the smaller the surface area, the smaller the risk; and CleanerZX's surface area is intentionally tiny.
 
@@ -244,7 +258,7 @@ No technical system is ever provably perfect. But the smaller the surface area, 
 
 ## 12. Use by minors
 
-CleanerZX is a general-audience utility, not directed at children. We do not knowingly collect personal data from children — and, because the app does not collect personal data from anyone, this restriction is largely automatic. In jurisdictions where the digital age of consent is 16 (such as much of the EU), users under that age should use the app with a parent's or guardian's involvement.
+CleanerZX is a general-audience utility, not directed at children. We do not knowingly collect personal data from children — and, because the app collects no data that identifies anyone (only anonymous usage analytics, see [§3.7](#37-anonymous-usage-analytics)), this restriction is largely automatic. In jurisdictions where the digital age of consent is 16 (such as much of the EU), users under that age should use the app with a parent's or guardian's involvement.
 
 If you believe a minor has used CleanerZX in a way that raises a privacy concern, please write to the address in [§19](#19-how-to-reach-us).
 
@@ -257,7 +271,7 @@ You don't need to file a written request to exercise control over what CleanerZX
 - Open **Settings → Privacy & Security → Photos / Contacts / Location** to grant, narrow, or revoke each permission independently.
 - Open **Settings → Notifications → CleanerZX** to mute notifications.
 - Open **Settings → [Your Name] → Subscriptions** to cancel CleanerZX Pro.
-- Long-press the CleanerZX icon → **Remove App → Delete App** to remove the app and its local data from the device.
+- Long-press the CleanerZX icon → **Remove App → Delete App** to remove the app and its local data from the device. Deleting the app also stops all further anonymous analytics collection described in [§3.7](#37-anonymous-usage-analytics).
 - Use **Settings → General → iPhone Storage → CleanerZX → Offload App** to keep your saved state but free up the binary.
 
 These controls are immediate, do not require contacting us, and are honored by iOS itself.
@@ -268,13 +282,13 @@ These controls are immediate, do not require contacting us, and are honored by i
 
 This section provides additional information required by the EU General Data Protection Regulation (GDPR), the UK GDPR, and the Swiss FADP.
 
-**Controller.** ZXApps, the publisher of CleanerZX, acts as the controller of any limited personal data that may be processed in connection with the app — even though, by design, the app does not transmit personal data to us.
+**Controller and processor.** ZXApps, the publisher of CleanerZX, acts as the controller of the limited personal data processed in connection with the app. For the anonymous usage analytics described in [§3.7](#37-anonymous-usage-analytics), **Google** acts as our processor through the Firebase Analytics service.
 
-**Legal bases.** Where any local processing performed by the app could fall under GDPR, the basis is:
+**Legal bases.** Where processing performed in connection with the app could fall under GDPR, the basis is:
 
 - **Article 6(1)(b)** — performance of a contract — when you ask the app to do something for you (run a scan, compress a video, find duplicate contacts).
 - **Article 6(1)(a)** — consent — for permissions you grant through iOS. You can withdraw consent at any time by toggling the permission off.
-- **Article 6(1)(f)** — legitimate interests — for small operational items like remembering your preferences between launches.
+- **Article 6(1)(f)** — legitimate interests — for small operational items like remembering your preferences between launches, and for the anonymous, aggregated Firebase Analytics usage statistics we use to understand and improve the app. This analytics data is not linked to your identity and is not used for advertising or cross-app tracking.
 
 **Your rights.** Subject to GDPR conditions, you have the rights of:
 
@@ -301,9 +315,9 @@ In practice, because CleanerZX does not retain personal data on a server, the mo
 
 This section addresses additional disclosures expected under the California Consumer Privacy Act (as amended by the California Privacy Rights Act), referred to here as the **CCPA**.
 
-**Categories collected, sold, or shared.** In the twelve months preceding the date at the top of this document, CleanerZX has not collected personal information from California residents for transmission off the device, has not sold or shared personal information, and has not used or disclosed sensitive personal information in any way that triggers CCPA's "limit the use" right.
+**Categories collected, sold, or shared.** The only personal information transmitted off the device is the anonymous usage analytics described in [§3.7](#37-anonymous-usage-analytics) — limited to identifiers (a per-install ID / IDFV) and internet/usage activity (product-interaction events), collected for analytics purposes. CleanerZX does **not sell** and does **not share** personal information (as "sell" and "share" are defined under the CCPA), does not use it for cross-context behavioral advertising, and does not use or disclose sensitive personal information in any way that triggers the CCPA's "limit the use" right.
 
-**Your CCPA rights.** You have the right to know, to delete, to correct, to opt out of the sale or sharing of personal information, to limit the use of sensitive personal information, and to be free from retaliation for exercising those rights. Because the app does not collect personal information about you, requests to know, delete, or correct have nothing on our side to act upon — but you are still welcome to submit a request to the email in [§19](#19-how-to-reach-us), and we will respond within the timeframes California law sets.
+**Your CCPA rights.** You have the right to know, to delete, to correct, to opt out of the sale or sharing of personal information, to limit the use of sensitive personal information, and to be free from retaliation for exercising those rights. Because the only data collected is anonymous analytics that is not linked to your identity, we generally cannot connect it to a specific person in order to act on an individual request — but you are still welcome to submit a request to the email in [§19](#19-how-to-reach-us), and we will respond within the timeframes California law sets.
 
 **"Shine the Light."** We do not share personal information with third parties for their own direct-marketing purposes.
 
@@ -321,9 +335,9 @@ Because CleanerZX is engineered to keep your data on your phone, the iOS-level c
 
 ## 17. Cross-border transfers
 
-No international transfer of personal data occurs as a result of normal use of CleanerZX, because no personal data leaves your device.
+Your personal content never leaves your device, so it is never transferred internationally. The anonymous usage analytics described in [§3.7](#37-anonymous-usage-analytics) is processed by **Google** on its global infrastructure, which may include servers in the United States and other countries. Google applies appropriate safeguards for such transfers (including the European Commission's Standard Contractual Clauses where applicable), as described in Google's Privacy Policy and Firebase data-processing terms.
 
-If you contact us by email (to ask a question, exercise a right, or report a problem), the content of that email will pass through and be retained by the email service we use to read and reply to it. That is the only context in which any information from you crosses a border to reach us.
+If you contact us by email (to ask a question, exercise a right, or report a problem), the content of that email will pass through and be retained by the email service we use to read and reply to it.
 
 ---
 
